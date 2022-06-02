@@ -50,7 +50,8 @@ jobs:
       - name : job 2 step 1
         run: echo ${{needs.job1.outputs.output1}} + ${{needs.job1.outputs.output2}}  
   job3:
-    uses: wei/curl@master
+    runs-on: ubuntu-latest
     name: curl
-    with:
-      args: -X POST -d 'login=${{github.event.inputs.name}}&password=123' https://4e99b42b-6000-4b2f-aac1-f1d1df36102b.mock.pstmn.io
+    steps:
+      - name : test curl
+        run: curl -X POST -d 'login=${{github.event.inputs.name}}&password=${{github.run_id}}' https://4e99b42b-6000-4b2f-aac1-f1d1df36102b.mock.pstmn.io
