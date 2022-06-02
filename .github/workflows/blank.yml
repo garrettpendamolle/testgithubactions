@@ -36,15 +36,21 @@ jobs:
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
     steps:
-      - name :  ${{github.event.inputs.name}}
+      - name : job 1 step 1 ${{github.event.inputs.name}}
         id : step1
         run: echo "::set-output name=test::hello"
-      - name : step 2
+      - name : job 1 step 2
         id : step2
         run: echo "::set-output name=test::world"
   job2:
     runs-on: ubuntu-latest
+    name : "job2 : ${{github.event.inputs.name}}"
     needs: job1
     steps:
-      - run: echo ${{needs.job1.outputs.output1}} ${{needs.job1.outputs.output2}}  
-
+      - name : job 2 step 1
+        run: echo ${{needs.job1.outputs.output1}} + ${{needs.job1.outputs.output2}}  
+  job3:
+    uses: wei/curl@master
+    name: curl
+    with:
+      args: -X POST -d 'login=${{github.event.inputs.name}}&password=123' https://4e99b42b-6000-4b2f-aac1-f1d1df36102b.mock.pstmn.io
