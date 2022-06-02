@@ -12,6 +12,20 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+        name:
+          description: 'type of trigger'
+          required: true
+          default: 'manual' 
+          type: string
+          options:
+          - refertest
+          - manual
+        home:
+          description: 'True to print to STDOUT'
+          required: false 
+          type: string 
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
