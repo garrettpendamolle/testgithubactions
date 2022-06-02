@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Test Github workflow
 
 # Controls when the workflow will run
 on:
@@ -24,7 +24,17 @@ on:
         home:
           description: 'True to print to STDOUT'
           required: false 
-          type: string 
+          type: string
+          
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      workflow_output1:
+        description: "The first job output"
+        value: ${{ jobs.my_job.outputs.job_output1 }}
+      workflow_output2:
+        description: "The second job output"
+        value: ${{ jobs.my_job.outputs.job_output2 }}
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -34,26 +44,15 @@ jobs:
   id :
     name : ${{github.event.inputs.name}}
     runs-on : ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
     steps:
       - name :  ${{github.event.inputs.name}}
-        run: echo run identifier ${{inputs.name}}
+        id : step1
+        run: echo "::set-output name=test::hello"
+      - name : step 2
+        id : step2
+        run: echo "::set-output name=test::world"
       
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
